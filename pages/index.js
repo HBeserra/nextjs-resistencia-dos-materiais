@@ -26,13 +26,7 @@ function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  function getDrawerWidth() {
-    if (!window) return 241;
-    const { innerWidth: width } = window;
-    return Math.min(Math.max(width * 0.6, 240), 400);
-  }
-
-  let drawerWidth = getDrawerWidth();
+  let drawerWidth = 320
 
   const drawer = (
     <div>
@@ -90,7 +84,7 @@ function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Calculadora de eixo {drawerWidth}
+            Calculadora de eixo
           </Typography>
         </Toolbar>
       </AppBar>
@@ -116,7 +110,7 @@ function ResponsiveDrawer(props) {
             },
           }}
         >
-          {drawer}
+          <CalcConfigs/>
         </Drawer>
         <Drawer
           variant="permanent"
@@ -129,7 +123,7 @@ function ResponsiveDrawer(props) {
           }}
           open
         >
-          {drawer}
+          <CalcConfigs/>
         </Drawer>
       </Box>
       <Box

@@ -18,7 +18,9 @@ export default function CalcConfigs() {
   const [peso_conjunto, set_peso_conjunto] = useState(1);
   const [coef_transmissao, set_coef_transmissao] = useState(1);
   const [d_entre_rodas, set_d_entre_rodas] = useState(0.5);
-  const [optional_entries, set_optional_entries] = useState(false);
+  const [optional_entries, set_optional_entries] = useState(true);
+  const [torque, set_torque] = useState(5);
+
 
   if (shaft_len / 2 - 0.1 < d_entre_rodas)
     set_d_entre_rodas(shaft_len / 2 - 0.1);
@@ -29,10 +31,16 @@ export default function CalcConfigs() {
         display: 'flex',
         gap: 2,
         flexDirection: 'column',
-        m: 2,
+        my: 3,
+        ml: 2,
+        mr: 4,
         alignItems: 'center',
       }}
     >
+      <Typography variant="subtitle2" sx={{ mb: 3}} align="center" noWrap component="div">
+        Configurações da Calculadora de eixo
+      </Typography>
+
       <Box sx={{ width: 200 }}>
         <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
           <TextField
@@ -88,6 +96,21 @@ export default function CalcConfigs() {
             required
           />
           <Slider value={d} onChange={(e, v) => set_d(v)} min={1} max={1000} />
+        </Stack>
+      </Box>
+      <Box sx={{ width: 200 }}>
+        <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
+          <TextField
+            value={torque}
+            label="Torque"
+            type="number"
+            variant="standard"
+            onChange={(e, v) => set_torque(v)}
+            min={1}
+            max={1000}
+            required
+          />
+          <Slider value={torque} onChange={(e, v) => set_torque(v)} min={1} max={1000} />
         </Stack>
       </Box>
       <Box sx={{ width: 200 }}>
@@ -162,11 +185,11 @@ export default function CalcConfigs() {
         >
           <Typography>Opções avançadas</Typography>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <FormControlLabel
             control={
               <Switch
-                value={!!optional_entries}
+                value={optional_entries}
                 onClick={(e) => set_optional_entries(e.target.checked)}
                 defaultChecked
               />
@@ -180,7 +203,139 @@ export default function CalcConfigs() {
               <TextField
                 disabled={!optional_entries}
                 value={shaft_len}
-                label="Comprimento do eixo (m)"
+                label="Correção acabamento superficial"
+                type="number"
+                variant="standard"
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+                required
+              />
+              <Slider
+                disabled={!optional_entries}
+                value={shaft_len}
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+              />
+            </Stack>
+          </Box>
+          <Box sx={{ width: 200 }}>
+            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
+              <TextField
+                disabled={!optional_entries}
+                value={shaft_len}
+                label="Fator Confiabilidade"
+                type="number"
+                variant="standard"
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+                required
+              />
+              <Slider
+                disabled={!optional_entries}
+                value={shaft_len}
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+              />
+            </Stack>
+          </Box>
+          <Box sx={{ width: 200 }}>
+            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
+              <TextField
+                disabled={!optional_entries}
+                value={shaft_len}
+                label="Fator de correção pela temperatura"
+                type="number"
+                variant="standard"
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+                required
+              />
+              <Slider
+                disabled={!optional_entries}
+                value={shaft_len}
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+              />
+            </Stack>
+          </Box>
+          <Box sx={{ width: 200 }}>
+            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
+              <TextField
+                disabled={!optional_entries}
+                value={shaft_len}
+                label="Fator relativo a serviços pesados"
+                type="number"
+                variant="standard"
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+                required
+              />
+              <Slider
+                disabled={!optional_entries}
+                value={shaft_len}
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+              />
+            </Stack>
+          </Box>
+          <Box sx={{ width: 200 }}>
+            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
+              <TextField
+                disabled={!optional_entries}
+                value={shaft_len}
+                label="Corrção da tensão devido à concentradores de tensões"
+                type="number"
+                variant="standard"
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+                required
+              />
+              <Slider
+                disabled={!optional_entries}
+                value={shaft_len}
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+              />
+            </Stack>
+          </Box>
+          <Box sx={{ width: 200 }}>
+            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
+              <TextField
+                disabled={!optional_entries}
+                value={shaft_len}
+                label="Correção da tensão devido à incertezas"
+                type="number"
+                variant="standard"
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+                required
+              />
+              <Slider
+                disabled={!optional_entries}
+                value={shaft_len}
+                onChange={(e, v) => set_shaft_len(v)}
+                min={1}
+                max={1000}
+              />
+            </Stack>
+          </Box>
+          <Box sx={{ width: 200 }}>
+            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
+              <TextField
+                disabled={!optional_entries}
+                value={shaft_len}
+                label="Limite de resistência à fadiga (50% limite de resistência à tração)"
                 type="number"
                 variant="standard"
                 onChange={(e, v) => set_shaft_len(v)}
