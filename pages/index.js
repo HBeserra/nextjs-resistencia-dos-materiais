@@ -1,76 +1,76 @@
 import CalcConfigs from '../components/calc_configs.js';
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
-import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import SettingsIcon from '@mui/icons-material/Settings';
+import axios from 'axios'
+import { LinearProgress } from '@mui/material';
+
 
 function ResponsiveDrawer(props) {
-  const { window } = props;
+  // const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  let drawerWidth = 320
+  const [query, set_query] = React.useState({})
+  const [timeOutId, setTimeOutId] = React.useState()
+  const [data, set_data] = React.useState()
+  const [loading, set_loading] = React.useState()
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  function update() {
+    let bodyFormData = new FormData();
+    Object.entries(query).forEach(([key, value]) => {
+      bodyFormData.append(key, value)
+      console.log("post req", key,value,bodyFormData)
+    })
+  
+    axios({
+      method: "post",
+      url: "http://localhost:5000/calc_dim",
+      data: bodyFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        //handle success
+        set_data(response.data)
+        console.log(response);
+        set_loading(false)
+      })
+      .catch(function (response) {
+        //handle error
+        console.log(response);
+        set_loading(false)
+      });
+  }
+
+  React.useEffect(() => {
+    set_loading(true)
+    if(timeOutId) clearTimeout(timeOutId)
+    setTimeOutId(setTimeout(()=> update(),5000))
+    console.log("change")
+  }, [query])
+
+  let drawerWidth = (typeof window !== "undefined") ? Math.max(Math.min(window?.innerWidth * 0.75, 320), 250) : 320
 
   const container =
-    window !== undefined ? () => window().document.body : undefined;
+    (typeof window !== "undefined") ? () => window.document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', width: '100%' }}>
       <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          ml: { md: `${drawerWidth}px` },
         }}
       >
         <Toolbar>
@@ -79,18 +79,19 @@ function ResponsiveDrawer(props) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2, display: { md: 'none' } }}
           >
-            <MenuIcon />
+            <SettingsIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Calculadora de eixo
+            Calculadora de eixo {drawerWidth}
           </Typography>
         </Toolbar>
       </AppBar>
+      
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
         aria-label="mailbox folders"
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -103,19 +104,19 @@ function ResponsiveDrawer(props) {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
+            display: { xs: 'block', md: 'none' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
             },
           }}
         >
-          <CalcConfigs/>
+          <CalcConfigs callback={set_query} />
         </Drawer>
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', sm: 'block' },
+            display: { xs: 'none', md: 'block' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
@@ -123,58 +124,35 @@ function ResponsiveDrawer(props) {
           }}
           open
         >
-          <CalcConfigs/>
+          <CalcConfigs  callback={set_query} />
         </Drawer>
       </Box>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          p: 0,
+          width: { md: `calc(100% - ${drawerWidth}px)` },
         }}
       >
         <Toolbar />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-          ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-          elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-          sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-          mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-          risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-          purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-          morbi tristique senectus et. Adipiscing elit duis tristique
-          sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+        {(loading)?<LinearProgress  />: null}
+        <Box sx={{ display: 'flex', alignContent: 'center', flexDirection: "column"}}>
+          <typography variant="subtitle1"> Variaveis</typography> 
+          <typography> Distancia da roda a mola: {parseFloat(data?.d).toFixed(3)}</typography>
+          <typography> Diametro do eixo: {parseFloat(data?.dim_eixo).toFixed(3)}</typography>
+          <typography> Força 1: {parseFloat(data?.f1).toFixed(3)}</typography>
+          <typography> Força 2: {parseFloat(data?.f2).toFixed(3)}</typography>
+          <typography> Momento Fletor maximo: {parseFloat(data?.momento_fletor_max).toFixed(3)}</typography>
+          <typography> Momento torçor: {parseFloat(data?.momento_torcor).toFixed(3)}</typography>
+          <typography> Reação 1: {parseFloat(data?.r1).toFixed(3)}</typography>
+          <typography> Reação 2: {parseFloat(data?.r2).toFixed(3)}</typography>
+          <typography> Comprimento do eixo: {parseFloat(data?.shaft_len).toFixed(3)}</typography>
+        </Box>
       </Box>
     </Box>
   );
 }
 
-ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
 
 export default ResponsiveDrawer;
