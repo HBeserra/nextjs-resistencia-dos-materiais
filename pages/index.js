@@ -10,10 +10,11 @@ import Typography from '@mui/material/Typography';
 import SettingsIcon from '@mui/icons-material/Settings';
 import axios from 'axios'
 import { LinearProgress } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
 
 function ResponsiveDrawer(props) {
-  // const { window } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -46,6 +47,11 @@ function ResponsiveDrawer(props) {
       })
       .catch(function (response) {
         //handle error
+        enqueueSnackbar('Falha ao calcular', { 
+          variant: 'error',
+          persist: true,
+          preventDuplicate: true,
+      });
         console.log(response);
         set_loading(false)
       });
@@ -54,7 +60,7 @@ function ResponsiveDrawer(props) {
   React.useEffect(() => {
     set_loading(true)
     if(timeOutId) clearTimeout(timeOutId)
-    setTimeOutId(setTimeout(()=> update(),5000))
+    setTimeOutId(setTimeout(()=> update(),1000))
     console.log("change")
   }, [query])
 

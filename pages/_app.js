@@ -1,8 +1,13 @@
 import '../styles/globals.css';
 import Head from 'next/head';
 import { ThemeProvider } from '@mui/system';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, CssBaseline, Fade, IconButton } from '@mui/material';
 import theme from '../components/theme';
+import { SnackbarProvider } from 'notistack';
+import { createRef } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+
+
 // import ReactGA from 'react-ga4';
 
 // ReactGA.initialize("G-X270YGFGX9");
@@ -10,6 +15,10 @@ import theme from '../components/theme';
 // if(typeof window !== "undefined") ReactGA.send({ hitType: "pageview", page: window?.location?.pathname });
 
 export default function MyApp({ Component, pageProps }) {
+  const notistackRef = createRef()
+  const onClickDismiss = key => () => {
+    notistackRef.current.closeSnackbar(key);
+  }
   return (
     <>
       <Head>
@@ -60,18 +69,33 @@ export default function MyApp({ Component, pageProps }) {
       <CssBaseline />
 
       <ThemeProvider theme={theme}>
-        <Box
-          sx={{
-            display: 'flex',
-            width: '100%',
-            justifyContent: 'center',
-            bgcolor: 'background.default',
-            color: 'text.primary',
-            minHeight: '100vh',
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={10000}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
           }}
+          ref={notistackRef}
+          action={(key) => (
+            <IconButton onClick={onClickDismiss(key)} aria-label="close">
+            <CloseIcon />
+          </IconButton>
+          )}
         >
-          <Component {...pageProps} />
-        </Box>
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              bgcolor: 'background.default',
+              color: 'text.primary',
+              minHeight: '100vh',
+            }}
+          >
+            <Component {...pageProps} />
+          </Box>
+        </SnackbarProvider>
       </ThemeProvider>
     </>
   );
