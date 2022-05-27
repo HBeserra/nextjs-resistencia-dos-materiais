@@ -35,7 +35,7 @@ function ResponsiveDrawer(props) {
   
     axios({
       method: "post",
-      url: "http://localhost:5000/calc_dim",
+      url: "https://hbeserra-nextjs-resistencia-dos-materiais-95p5jr94hpg5r-5000.githubpreview.dev/calc_dim",
       data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
