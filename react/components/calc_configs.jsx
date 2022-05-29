@@ -114,11 +114,12 @@ export default function CalcConfigs(props) {
             type="number"
             variant="standard"
             onChange={(e, v) => set_d(v)}
-            min={1}
+            min={0.1}
             max={shaft_len/2}
+            step={0.1}
             required
           />
-          <Slider value={d} onChange={(e, v) => set_d(v)} min={1} max={shaft_len/2} />
+          <Slider value={d} onChange={(e, v) => set_d(v)} step={0.1} min={0.1} max={shaft_len/2} />
         </Stack>
         <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
           <TextField

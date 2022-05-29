@@ -48,7 +48,7 @@ def calculoreac(A, d, i, torque, peso_conjunto):
     return f1, f2, r1, r2, momento_fletor_max, momento_torcor
 
 def plot_shaft(d, shaft_len, f1, f2, r1, r2, m1):
-
+    plt.clf() 
     plt.title('Diagrama de forças')
     margin = (shaft_len + 1)/7
     plt.axis([-margin, shaft_len+ margin, -2, 2])
@@ -59,11 +59,11 @@ def plot_shaft(d, shaft_len, f1, f2, r1, r2, m1):
     plt.plot([0, shaft_len],[-0.2,-0.2], 'b', marker='^', ls='', ms=15)
 
     # Forças
-    plt.arrow(0 + d, 1, 0, -0.8, head_width=0.2, head_length=0.2, fc='k', ec='k', width=0.02)
-    plt.arrow(shaft_len - d, 1, 0, -0.8, head_width=0.2, head_length=0.2, fc='k', ec='k', width=0.02)
+    plt.arrow(0 + d, 1, 0, -0.8, head_width=(shaft_len + 1)/25, head_length=0.2, fc='k', ec='k', width=0.02)
+    plt.arrow(shaft_len - d, 1, 0, -0.8, head_width=(shaft_len + 1)/25, head_length=0.2, fc='k', ec='k', width=0.02)
 
 
-    # distancias
+    # distancias 
     plt.plot([0, d],[-1,-1], 'k', marker='|', ls='--', ms=15)
     plt.plot([d, shaft_len - d],[-1,-1], 'k', marker='|', ls='--', ms=15)
     plt.plot([shaft_len - d, shaft_len],[-1,-1], 'k', marker='|', ls='--', ms=15)
@@ -97,12 +97,13 @@ def plot_shaft(d, shaft_len, f1, f2, r1, r2, m1):
 
     ax.plot([shaft_len/2],[0], 'r', marker=r'$\circlearrowright$',ms=20)
     plot_bytes = BytesIO()
-    plt.savefig(plot_bytes, format = "png")
+    plt.savefig(plot_bytes, format = "png", transparent=True)
     plot_bytes.seek(0)
 
     return plot_bytes
 
 def plot_diagrama_forca_cortante(fc, shaft_len, d):
+    
     plt.title('Diagrama força cortante')
     marginx = (shaft_len + 1)/7
     marginy = (abs(fc) + 1)/7

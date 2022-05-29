@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.collections import PatchCollection
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from sqlalchemy import null
 matplotlib.use('Agg')
 import numpy as np
 from io import StringIO, BytesIO
@@ -107,9 +108,11 @@ def shaft_plot_req():
 def cortante_plot_req():
     shaft_len = float(request.form.get('shaft_len'))
     f1 = float(request.form.get('f1'))
-    cortante_plot = funcs.plot_diagrama_forca_cortante(f1, shaft_len)
-
-    return send_file(cortante_plot, mimetype='image/png')
+    d = float(request.form.get('d'))
+    cortante_plot = funcs.plot_diagrama_forca_cortante(f1, shaft_len, d)
+    response = send_file(cortante_plot, mimetype='image/png')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route("/torcor_plot", methods = ['POST'])
 def torcor_plot_req():

@@ -1,4 +1,4 @@
-import CalcConfigs from '../components/calc_configs.js';
+import CalcConfigs from '../components/calc_configs.jsx';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -11,6 +11,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import axios from 'axios'
 import { LinearProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import ResultTable from '../components/result_table.jsx';
+import Figure from '../components/figure.jsx';
 
 
 function ResponsiveDrawer(props) {
@@ -27,20 +29,20 @@ function ResponsiveDrawer(props) {
   const [loading, set_loading] = React.useState()
   const [image_url, set_image_url] = React.useState()
 
-  
+
 
   function update() {
     let bodyFormData = new FormData();
     Object.entries(query).forEach(([key, value]) => {
       bodyFormData.append(key, value)
-      console.log("post req", key,value,bodyFormData)
+      console.log("post req", key, value, bodyFormData)
     })
-    
-    
+
+
 
     axios({
       method: "post",
-      url: "https://hbeserra.pythonanywhere.com/calc_dim",
+      url: process.env.NEXT_PUBLIC_PY_SERVER + "/calc_dim",
       data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
@@ -49,28 +51,15 @@ function ResponsiveDrawer(props) {
         set_data(response.data)
         console.log(response);
         set_loading(false)
-        let bodyFormData = new FormData();
-        Object.entries(response.data).forEach(([key, value]) => {
-          bodyFormData.append(key, value)
-          console.log("post req", key, value, bodyFormData)
-        })
-        axios({
-          method: "post",
-          url: "https://hbeserra.pythonanywhere.com/shaft_plot",
-          data: bodyFormData,
-          responseType: 'blob',
-          headers: { "Content-Type": "multipart/form-data" },
-        }).then(({data}) => {
-          set_image_url(URL.createObjectURL(data))
-        }).catch(console.error)
+        
       })
       .catch(function (response) {
         //handle error
-        enqueueSnackbar('Falha ao calcular', { 
+        enqueueSnackbar('Falha ao calcular', {
           variant: 'error',
           persist: true,
           preventDuplicate: true,
-      });
+        });
         console.log(response);
         set_loading(false)
       });
@@ -78,8 +67,8 @@ function ResponsiveDrawer(props) {
 
   React.useEffect(() => {
     set_loading(true)
-    if(timeOutId) clearTimeout(timeOutId)
-    setTimeOutId(setTimeout(()=> update(),1000))
+    if (timeOutId) clearTimeout(timeOutId)
+    setTimeOutId(setTimeout(() => update(), 1000))
     console.log("change")
   }, [query])
 
@@ -109,11 +98,11 @@ function ResponsiveDrawer(props) {
             <SettingsIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Calculadora de eixo {drawerWidth}
+            Calculadora de eixo
           </Typography>
         </Toolbar>
       </AppBar>
-      
+
       <Box
         component="nav"
         sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
@@ -149,7 +138,7 @@ function ResponsiveDrawer(props) {
           }}
           open
         >
-          <CalcConfigs  callback={set_query} />
+          <CalcConfigs callback={set_query} />
         </Drawer>
       </Box>
       <Box
@@ -161,27 +150,31 @@ function ResponsiveDrawer(props) {
         }}
       >
         <Toolbar />
-        {(loading)?<LinearProgress  />: null}
-        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: "column"}}>
-          <typography variant="subtitle1"> Variaveis</typography> 
-          <typography> Distancia da roda a mola: {parseFloat(data?.d).toFixed(3)}</typography>
-          <typography> Diametro do eixo: {parseFloat(data?.dim_eixo).toFixed(3)}</typography>
-          <typography> Força 1: {parseFloat(data?.f1).toFixed(3)}</typography>
-          <typography> Força 2: {parseFloat(data?.f2).toFixed(3)}</typography>
-          <typography> Momento Fletor maximo: {parseFloat(data?.momento_fletor_max).toFixed(3)}</typography>
-          <typography> Momento torçor: {parseFloat(data?.momento_torcor).toFixed(3)}</typography>
-          <typography> Reação 1: {parseFloat(data?.r1).toFixed(3)}</typography>
-          <typography> Reação 2: {parseFloat(data?.r2).toFixed(3)}</typography>
-          <typography> Comprimento do eixo: {parseFloat(data?.shaft_len).toFixed(3)}</typography>
+        {(loading) ? <LinearProgress /> : null}
+        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: "column" }}>
+          <ResultTable sx={{ mt: 3}} rows={[
+            { name: 'Distancia d', value: data?.d, unidade: 'm' },
+            { name: "Diametro do eixo", value: data?.dim_eixo, unidade: 'm' },
+            { name: "Força 1", value: data?.f1, unidade: 'N' },
+            { name: "Força 2", value: data?.f2, unidade: 'N' },
+            { name: "Momento Fletor maximo", value: data?.momento_fletor_max, unidade: 'N.m' },
+            { name: "Momento torçor", value: data?.momento_torcor, unidade: 'N.m' },
+            { name: "Reação 1", value: data?.r1, unidade: 'N' },
+            { name: "Reação 2", value: data?.r2, unidade: 'N' },
+            { name: "Comprimento do eixo", value: data?.shaft_len, unidade: 'm' },
+          ]} />
           <Box
             component="img"
             sx={{
               px: 10,
-              maxWidth: { md: '60vw'}
-              }}
+              maxWidth: { md: '60vw' }
+            }}
             alt="Diagrama"
             src={image_url}
           />
+          <Figure data={data} url={process.env.NEXT_PUBLIC_PY_SERVER + "/shaft_plot"}></Figure>
+          <Figure data={data} url={process.env.NEXT_PUBLIC_PY_SERVER + "/cortante_plot"}></Figure>
+
 
         </Box>
       </Box>
