@@ -99,7 +99,8 @@ def plot_shaft(d, shaft_len, f1, f2, r1, r2, m1):
     plot_bytes = BytesIO()
     plt.savefig(plot_bytes, format = "png", transparent=True)
     plot_bytes.seek(0)
-
+    plt.clf()
+    
     return plot_bytes
 
 def plot_diagrama_forca_cortante(fc, shaft_len, d):
@@ -126,6 +127,7 @@ def plot_diagrama_forca_cortante(fc, shaft_len, d):
     plot_bytes = BytesIO()
     plt.savefig(plot_bytes, format = "png")
     plot_bytes.seek(0)
+    plt.clf()
 
     return plot_bytes
 
@@ -152,6 +154,7 @@ def plot_momento_fletor(M, shaft_len, fc, d):
     plot_bytes = BytesIO()
     plt.savefig(plot_bytes, format = "png")
     plot_bytes.seek(0)
+    plt.clf()
 
     return plot_bytes
 
@@ -177,6 +180,7 @@ def plot_momento_torcor(shaft_len, T, fc):
     plot_bytes = BytesIO()
     plt.savefig(plot_bytes, format = "png")
     plot_bytes.seek(0)
+    plt.clf()
 
     return plot_bytes
     # ax.spines.set_visible(False)
