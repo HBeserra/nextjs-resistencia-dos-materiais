@@ -84,7 +84,9 @@ def calc_dim():
                 return response
   
         else:
-            return "ERROR ON CALCULUS"
+            response = "ERROR ON CALCULUS"
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
 
 @app.route("/shaft_plot", methods = ['POST'])
 def shaft_plot_req():
@@ -97,7 +99,9 @@ def shaft_plot_req():
     momento_torcor = float(request.form.get('momento_torcor'))
     shaft_plot = funcs.plot_shaft(d, shaft_len, f1, f2, r1, r2, momento_torcor)
 
-    return send_file(shaft_plot, mimetype='image/png')
+    response = send_file(shaft_plot, mimetype='image/png')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route("/cortante_plot", methods = ['POST'])
 def cortante_plot_req():

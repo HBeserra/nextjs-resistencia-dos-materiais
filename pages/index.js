@@ -25,6 +25,9 @@ function ResponsiveDrawer(props) {
   const [timeOutId, setTimeOutId] = React.useState()
   const [data, set_data] = React.useState()
   const [loading, set_loading] = React.useState()
+  const [image_url, set_image_url] = React.useState()
+
+  
 
   function update() {
     let bodyFormData = new FormData();
@@ -32,10 +35,12 @@ function ResponsiveDrawer(props) {
       bodyFormData.append(key, value)
       console.log("post req", key,value,bodyFormData)
     })
-  
+    
+    
+
     axios({
       method: "post",
-      url: "https://hbeserra-nextjs-resistencia-dos-materiais-95p5jr94hpg5r-5000.githubpreview.dev/calc_dim",
+      url: "https://hbeserra.pythonanywhere.com/calc_dim",
       data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
@@ -44,6 +49,20 @@ function ResponsiveDrawer(props) {
         set_data(response.data)
         console.log(response);
         set_loading(false)
+        let bodyFormData = new FormData();
+        Object.entries(response.data).forEach(([key, value]) => {
+          bodyFormData.append(key, value)
+          console.log("post req", key, value, bodyFormData)
+        })
+        axios({
+          method: "post",
+          url: "https://hbeserra.pythonanywhere.com/shaft_plot",
+          data: bodyFormData,
+          responseType: 'blob',
+          headers: { "Content-Type": "multipart/form-data" },
+        }).then(({data}) => {
+          set_image_url(URL.createObjectURL(data))
+        }).catch(console.error)
       })
       .catch(function (response) {
         //handle error
@@ -143,7 +162,7 @@ function ResponsiveDrawer(props) {
       >
         <Toolbar />
         {(loading)?<LinearProgress  />: null}
-        <Box sx={{ display: 'flex', alignContent: 'center', flexDirection: "column"}}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: "column"}}>
           <typography variant="subtitle1"> Variaveis</typography> 
           <typography> Distancia da roda a mola: {parseFloat(data?.d).toFixed(3)}</typography>
           <typography> Diametro do eixo: {parseFloat(data?.dim_eixo).toFixed(3)}</typography>
@@ -154,6 +173,16 @@ function ResponsiveDrawer(props) {
           <typography> Reação 1: {parseFloat(data?.r1).toFixed(3)}</typography>
           <typography> Reação 2: {parseFloat(data?.r2).toFixed(3)}</typography>
           <typography> Comprimento do eixo: {parseFloat(data?.shaft_len).toFixed(3)}</typography>
+          <Box
+            component="img"
+            sx={{
+              px: 10,
+              maxWidth: { md: '60vw'}
+              }}
+            alt="Diagrama"
+            src={image_url}
+          />
+
         </Box>
       </Box>
     </Box>
