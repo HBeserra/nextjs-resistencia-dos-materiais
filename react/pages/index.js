@@ -152,9 +152,9 @@ function ResponsiveDrawer(props) {
         <Toolbar />
         {(loading) ? <LinearProgress /> : null}
         <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: "column" }}>
-          <ResultTable sx={{ mt: 3}} rows={[
+          <ResultTable  rows={[
             { name: 'Distancia d', value: data?.d, unidade: 'm' },
-            { name: "Diametro do eixo", value: data?.dim_eixo, unidade: 'm' },
+            { name: "Diametro do eixo", value: data?.dim_eixo*100, unidade: 'cm' },
             { name: "Força 1", value: data?.f1, unidade: 'N' },
             { name: "Força 2", value: data?.f2, unidade: 'N' },
             { name: "Momento Fletor maximo", value: data?.momento_fletor_max, unidade: 'N.m' },
@@ -163,18 +163,12 @@ function ResponsiveDrawer(props) {
             { name: "Reação 2", value: data?.r2, unidade: 'N' },
             { name: "Comprimento do eixo", value: data?.shaft_len, unidade: 'm' },
           ]} />
-          <Box
-            component="img"
-            sx={{
-              px: 10,
-              maxWidth: { md: '60vw' }
-            }}
-            alt="Diagrama"
-            src={image_url}
-          />
           <Figure data={data} url={process.env.NEXT_PUBLIC_PY_SERVER + "/shaft_plot"}></Figure>
           <Figure data={data} url={process.env.NEXT_PUBLIC_PY_SERVER + "/cortante_plot"}></Figure>
+          <Figure data={data} url={process.env.NEXT_PUBLIC_PY_SERVER + "/torcor_plot"}></Figure>
+          <Figure data={data} url={process.env.NEXT_PUBLIC_PY_SERVER + "/momento_fletor_plot"}></Figure>
 
+          
 
         </Box>
       </Box>

@@ -12,6 +12,8 @@ matplotlib.use('Agg')
 import numpy as np
 from io import StringIO, BytesIO
 import funcs
+from matplotlib.figure import Figure
+import base64
 
 #PODE COMENTAR ESSA LINHA
 #from flask_ngrok import run_with_ngrok
@@ -23,9 +25,21 @@ CORS(app)
 #ESSA AQUI EMBAIXO TAMBÉM
 #run_with_ngrok(app)
 
-@app.route("/", methods = ['GET, POST'])
+
+
+@app.route("/")
 def hello():
-    return "Oi, eu funciono."
+    # Generate the figure **without using pyplot**.
+    fig = Figure()
+    ax = fig.subplots()
+    ax.plot([1, 2])
+    ax.title.set_text('First Plot')
+    # Save it to a temporary buffer.
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    # Embed the result in the html output.
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return f"<img src='data:image/png;base64,{data}'/>"
 
 @app.route("/calc_dim", methods = ['POST'])
 def calc_dim():
@@ -122,19 +136,23 @@ def torcor_plot_req():
     print(momento_torcor, shaft_len, f1)
     torcor_plot = funcs.plot_momento_torcor(shaft_len, momento_torcor, f1)
 
-    return send_file(torcor_plot, mimetype='image/png')
+    response = send_file(torcor_plot, mimetype='image/png')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route("/momento_fletor_plot", methods = ['POST'])
 def fletor_plot_req():
     f1 = float(request.form.get('f1'))
     shaft_len = float(request.form.get('shaft_len'))
     d = float(request.form.get('d'))
-    momento_fletor = float(request.form.get('momento_fletor'))
+    momento_fletor = float(request.form.get('momento_fletor_max'))
     momento_fletor_plot = funcs.plot_momento_fletor(momento_fletor, shaft_len, f1, d)
 
-    return send_file(momento_fletor_plot, mimetype='image/png')
+    response = send_file(momento_fletor_plot, mimetype='image/png')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 if __name__ == "__main__":
-    app.run(debug = False) #SE QUISER PODE USAR NESSE MODO AQ SE N FOR USAR NGROK
+    app.run(debug = False, host="0.0.0.0") #SE QUISER PODE USAR NESSE MODO AQ SE N FOR USAR NGROK
     #app.run() 

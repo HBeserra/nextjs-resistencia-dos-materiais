@@ -17,9 +17,11 @@ export default function Figure({ data: input_data, url, sx }) {
         if (typeof (data) != 'object') return;
         let bodyFormData = new FormData();
         Object.entries(data).forEach(([key, value]) => {
-            bodyFormData.append(key, value.toString())
+            bodyFormData.append(key, (value.toString().length > 5)? value.toPrecision(3).toString() :  value.toString())
             console.log("post req", key, value, bodyFormData)
         })
+
+        
 
         axios({
             method: "post",
@@ -44,8 +46,9 @@ export default function Figure({ data: input_data, url, sx }) {
         <Box
             component="img"
             sx={{
-                px: 10,
-                maxWidth: { md: '60vw' },
+                // px: 10,
+                maxWidth: { md: '30vw' },
+                width: '100%',
                 ...sx
             }}
             alt="Diagrama"

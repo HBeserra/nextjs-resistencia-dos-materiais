@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import InputSliderWText from './Input_slider_text';
 
 export default function CalcConfigs(props) {
   const [shaft_len, set_shaft_len] = useState(1);
@@ -30,7 +31,7 @@ export default function CalcConfigs(props) {
       coeficiente_seguranca,
       peso_conjunto,
       coef_transmissao,
-      d_entre_rodas: shaft_len - 2*d,
+      d_entre_rodas: shaft_len - 2 * d,
       optional_entries,
       torque
     })
@@ -41,17 +42,17 @@ export default function CalcConfigs(props) {
         coeficiente_seguranca,
         peso_conjunto,
         coef_transmissao,
-        d_entre_rodas: shaft_len - 2*d,
-        optional_entries: optional_entries? 1:0,
+        d_entre_rodas: shaft_len - 2 * d,
+        optional_entries: optional_entries ? 1 : 0,
         torque
       })
-    } catch(error) {
+    } catch (error) {
       console.log(props)
       console.error("error on query update", error)
     }
   }
 
-  useEffect(()=>update(), [
+  useEffect(() => update(), [
     shaft_len,
     d,
     coeficiente_seguranca,
@@ -85,7 +86,7 @@ export default function CalcConfigs(props) {
         width: '100%',
 
         ml: 1,
-        mr: 4,
+        pr: 4,
       }}>
         <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
           <TextField
@@ -115,11 +116,11 @@ export default function CalcConfigs(props) {
             variant="standard"
             onChange={(e, v) => set_d(v)}
             min={0.1}
-            max={shaft_len/2}
+            max={shaft_len / 2}
             step={0.1}
             required
           />
-          <Slider value={d} onChange={(e, v) => set_d(v)} step={0.1} min={0.1} max={shaft_len/2} />
+          <Slider value={d} onChange={(e, v) => set_d(v)} step={0.1} min={0.1} max={shaft_len / 2} />
         </Stack>
         <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
           <TextField
@@ -218,167 +219,35 @@ export default function CalcConfigs(props) {
             label="Personalizar as configurações"
             labelPlacement="end"
           />
-          <Box sx={{ width: '100%' }}>
-            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
-              <TextField
-                fullWidth
-                disabled={!optional_entries}
-                value={shaft_len}
-                label="Correção acabamento superficial"
-                type="number"
-                variant="standard"
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-                required
-              />
-              <Slider
-                disabled={!optional_entries}
-                value={shaft_len}
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-              />
-            </Stack>
-          </Box>
-          <Box sx={{ width: '100%' }}>
-            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
-              <TextField
-                fullWidth
-                disabled={!optional_entries}
-                value={shaft_len}
-                label="Fator Confiabilidade"
-                type="number"
-                variant="standard"
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-                required
-              />
-              <Slider
-                disabled={!optional_entries}
-                value={shaft_len}
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-              />
-            </Stack>
-          </Box>
-          <Box sx={{ width: '100%' }}>
-            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
-              <TextField
-                fullWidth
-                disabled={!optional_entries}
-                value={shaft_len}
-                label="Fator de correção pela temperatura"
-                type="number"
-                variant="standard"
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-                required
-              />
-              <Slider
-                disabled={!optional_entries}
-                value={shaft_len}
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-              />
-            </Stack>
-          </Box>
-          <Box sx={{ width: '100%' }}>
-            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
-              <TextField
-                fullWidth
-                disabled={!optional_entries}
-                value={shaft_len}
-                label="Fator relativo a serviços pesados"
-                type="number"
-                variant="standard"
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-                required
-              />
-              <Slider
-                disabled={!optional_entries}
-                value={shaft_len}
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-              />
-            </Stack>
-          </Box>
-          <Box sx={{ width: '100%' }}>
-            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
-              <TextField
-                fullWidth
-                disabled={!optional_entries}
-                value={shaft_len}
-                label="Corrção da tensão devido à concentradores de tensões"
-                type="number"
-                variant="standard"
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-                required
-              />
-              <Slider
-                disabled={!optional_entries}
-                value={shaft_len}
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-              />
-            </Stack>
-          </Box>
-          <Box sx={{ width: '100%' }}>
-            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
-              <TextField
-                fullWidth
-                disabled={!optional_entries}
-                value={shaft_len}
-                label="Correção da tensão devido à incertezas"
-                type="number"
-                variant="standard"
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-                required
-              />
-              <Slider
-                disabled={!optional_entries}
-                value={shaft_len}
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-              />
-            </Stack>
-          </Box>
-          <Box sx={{ width: '100%' }}>
-            <Stack spacing={2} sx={{ mb: 1 }} alignItems="center">
-              <TextField
-                fullWidth
-                disabled={!optional_entries}
-                value={shaft_len}
-                label="Limite de resistência à fadiga (50% limite de resistência à tração)"
-                type="number"
-                variant="standard"
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-                required
-              />
-              <Slider
-                disabled={!optional_entries}
-                value={shaft_len}
-                onChange={(e, v) => set_shaft_len(v)}
-                min={1}
-                max={1000}
-              />
-            </Stack>
-          </Box>
+          <InputSliderWText
+            label="Correção acabamento superficial"
+            min={1}
+            max={1000} />
+          <InputSliderWText
+            label="Fator Confiabilidade"
+            min={1}
+            max={1000} />
+          <InputSliderWText
+            label="Fator de correção pela temperatura"
+            min={1}
+            max={1000} />
+          <InputSliderWText
+            label="Fator relativo a serviços pesados"
+            min={1}
+            max={1000} />
+          <InputSliderWText
+            label="Corrção da tensão devido à concentradores de tensões"
+            min={1}
+            max={1000} />
+          <InputSliderWText
+            label="Correção da tensão devido à incertezas"
+            min={1}
+            max={1000} />
+          <InputSliderWText
+            label="Limite de resistência à fadiga (50% limite de resistência à tração)"
+            min={1}
+            max={1000} />
+          
         </AccordionDetails>
       </Accordion>
     </Box>

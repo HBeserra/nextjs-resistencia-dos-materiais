@@ -6,12 +6,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Box } from '@mui/system';
 
 
 export default function DenseTable({rows, sx}) {
     if(!Array.isArray(rows)) return null;
   return (
-    <TableContainer  sx={{ width: '100%', maxWidth: 650, ...sx }} component={Paper}>
+    <Box sx={{ p: 1}}>
+      <TableContainer  sx={{ width: '100%', maxWidth: 650, ...sx }} elevation={3} component={Paper}>
       <Table  size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
@@ -28,11 +30,12 @@ export default function DenseTable({rows, sx}) {
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="right">{row?.value && ((row.value.toString().length > 5)? row.value.toPrecision(3).toString() :  row.value.toString())+ ' ' + row.unidade}</TableCell>
+              <TableCell align="right">{row?.value && ((row.value.toString().length > 5)? row.value.toPrecision(3) :  row.value.toString())+ ' ' + row.unidade}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    </Box>
   );
 }

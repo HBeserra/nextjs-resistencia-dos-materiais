@@ -11,6 +11,8 @@ import math
 matplotlib.use('Agg')
 import numpy as np
 from io import StringIO, BytesIO
+from matplotlib.figure import Figure
+
 
 def validador(d, shaft_len):
     #Validação dos inputs
@@ -48,46 +50,48 @@ def calculoreac(A, d, i, torque, peso_conjunto):
     return f1, f2, r1, r2, momento_fletor_max, momento_torcor
 
 def plot_shaft(d, shaft_len, f1, f2, r1, r2, m1):
-    plt.clf() 
-    plt.title('Diagrama de forças')
-    margin = (shaft_len + 1)/7
-    plt.axis([-margin, shaft_len+ margin, -2, 2])
+    fig = Figure()
+    ax = fig.subplots()
+    ax.title.set_text('Diagrama de forças')
+    margin = (shaft_len + 1)/10
+    ax.axis([-margin, shaft_len+ margin, -2, 2])
 
     # eixo
-    plt.plot([0, shaft_len],[0,0], 'k')
+    ax.plot([0, shaft_len],[0,0], 'k')
     # apoios
-    plt.plot([0, shaft_len],[-0.2,-0.2], 'b', marker='^', ls='', ms=15)
+    ax.plot([0, shaft_len],[-0.2,-0.2], 'b', marker='^', ls='', ms=15)
 
     # Forças
-    plt.arrow(0 + d, 1, 0, -0.8, head_width=(shaft_len + 1)/25, head_length=0.2, fc='k', ec='k', width=0.02)
-    plt.arrow(shaft_len - d, 1, 0, -0.8, head_width=(shaft_len + 1)/25, head_length=0.2, fc='k', ec='k', width=0.02)
+    ax.arrow(0 + d, 1, 0, -0.8, head_width=(shaft_len + 1)/25, head_length=0.2, fc='k', ec='k', width=0.02)
+    ax.arrow(shaft_len - d, 1, 0, -0.8, head_width=(shaft_len + 1)/25, head_length=0.2, fc='k', ec='k', width=0.02)
 
 
     # distancias 
-    plt.plot([0, d],[-1,-1], 'k', marker='|', ls='--', ms=15)
-    plt.plot([d, shaft_len - d],[-1,-1], 'k', marker='|', ls='--', ms=15)
-    plt.plot([shaft_len - d, shaft_len],[-1,-1], 'k', marker='|', ls='--', ms=15)
+    ax.plot([0, d],[-1,-1], 'k', marker='|', ls='--', ms=15)
+    ax.plot([d, shaft_len - d],[-1,-1], 'k', marker='|', ls='--', ms=15)
+    ax.plot([shaft_len - d, shaft_len],[-1,-1], 'k', marker='|', ls='--', ms=15)
 
     # Marcações
-    plt.text(d/2,-1.5, 'd', fontdict=None, ha="center")
-    plt.text(shaft_len - d/2,-1.5, 'd', fontdict=None, ha="center")
-    plt.text(shaft_len/2,-1.5, 'A', fontdict=None, ha="center")
+    ax.text(d/2,-1.5, 'd', fontdict=None, ha="center")
+    ax.text(shaft_len - d/2,-1.5, 'd', fontdict=None, ha="center")
+    ax.text(shaft_len/2,-1.5, 'A', fontdict=None, ha="center")
 
-    plt.text(d,1.2, f'{f1} N', fontdict=None, ha="center")
-    plt.text(shaft_len - d,1.2, f'{f2} N', fontdict=None, ha="center")
+    ax.text(d,1.2, f'{f1} N', fontdict=None, ha="center")
+    ax.text(shaft_len - d,1.2, f'{f2} N', fontdict=None, ha="center")
 
-    plt.text(0,-0.7, f'{r1} N', fontdict=None, ha="center")
-    plt.text(shaft_len,-0.7,f'{r2} N', fontdict=None, ha="center")
+    ax.text(0,-0.7, f'{r1} N', fontdict=None, ha="center")
+    ax.text(shaft_len,-0.7,f'{r2} N', fontdict=None, ha="center")
 
-    plt.text(shaft_len/2, 0.3, f'{m1} N.m', fontdict=None, ha="center")
+    ax.text(shaft_len/2, 0.3, f'{m1} N.m', fontdict=None, ha="center")
 
     # Dados
 
     dados = f'Dados:\n d = {d}\n A = {shaft_len- 2*d}\n F1 = {0} \n F2 = {0} \n '
 
     # plt.text(0,-5, dados, fontdict=None, )
-    plt.gca().get_yaxis().set_visible(False)
-    ax = plt.subplot()
+    ax.axis('off')
+    # ax.gca().get_yaxis().set_visible(False)
+    # ax = plt.subplot()
     # ax.spines.set_visible(False)
 
     for key, spine in ax.spines.items():
@@ -97,26 +101,28 @@ def plot_shaft(d, shaft_len, f1, f2, r1, r2, m1):
 
     ax.plot([shaft_len/2],[0], 'r', marker=r'$\circlearrowright$',ms=20)
     plot_bytes = BytesIO()
-    plt.savefig(plot_bytes, format = "png", transparent=True)
+    fig.savefig(plot_bytes, format = "png", transparent=True)
     plot_bytes.seek(0)
-    plt.clf()
     
     return plot_bytes
 
 def plot_diagrama_forca_cortante(fc, shaft_len, d):
     
-    plt.title('Diagrama força cortante')
+    fig = Figure()
+    ax = fig.subplots()
+    ax.title.set_text('Diagrama força cortante')
+
     marginx = (shaft_len + 1)/7
     marginy = (abs(fc) + 1)/7
 
-    plt.axis([-marginx, shaft_len+ marginx,  fc - marginy if fc < 0 else marginy, fc + marginy if fc > 0 else marginy])
+    ax.axis([-marginx, shaft_len+ marginx,  fc - marginy if fc < 0 else marginy, fc + marginy if fc > 0 else marginy])
 
     # eixo
-    plt.step([0,0, d, shaft_len - d, shaft_len,0],[0,fc,fc,0,fc,0])
-    plt.plot([0, shaft_len],[0,0], 'k', ls="--")
+    ax.step([0,0, d, shaft_len - d, shaft_len,0],[0,fc,fc,0,fc,0])
+    ax.plot([0, shaft_len],[0,0], 'k', ls="--")
     # plt.plot([0, d, shaft_len - d, shaft_len],[fc,0,0,fc], 'b', )
 
-    ax = plt.subplot()
+    # ax = plt.subplot()
     # ax.spines.set_visible(False)
 
     for key, spine in ax.spines.items():
@@ -125,25 +131,28 @@ def plot_diagrama_forca_cortante(fc, shaft_len, d):
     ax.spines["left"].set_visible(True)
 
     plot_bytes = BytesIO()
-    plt.savefig(plot_bytes, format = "png")
+    fig.savefig(plot_bytes, format = "png", transparent=True)
     plot_bytes.seek(0)
     plt.clf()
 
     return plot_bytes
 
 def plot_momento_fletor(M, shaft_len, fc, d):
-    plt.title('Diagrama Momento Fletor')
+    fig = Figure()
+    ax = fig.subplots()
+    ax.title.set_text('Diagrama Momento Fletor')
+
     marginx = (shaft_len + 1)/7
     marginy = (abs(fc) + 1)/7
 
-    plt.axis([-marginx, shaft_len+ marginx,  fc - marginy if fc < 0 else marginy, fc + marginy if fc > 0 else marginy])
+    # ax.axis([-marginx, shaft_len+ marginx,  fc - marginy if fc < 0 else marginy, fc + marginy if fc > 0 else marginy])
 
     # eixo
-    plt.plot([0, d, shaft_len - d, shaft_len],[0,M,M,0])
-    plt.plot([0, shaft_len],[0,0], 'k', ls="--")
+    ax.plot([0, d, shaft_len - d, shaft_len],[0,M,M,0])
+    ax.plot([0, shaft_len],[0,0], 'k', ls="--")
     # plt.plot([0, d, shaft_len - d, shaft_len],[fc,0,0,fc], 'b', )
 
-    ax = plt.subplot()
+    # ax = plt.subplot()
     # ax.spines.set_visible(False)
 
     for key, spine in ax.spines.items():
@@ -152,25 +161,25 @@ def plot_momento_fletor(M, shaft_len, fc, d):
     ax.spines["left"].set_visible(True)
     
     plot_bytes = BytesIO()
-    plt.savefig(plot_bytes, format = "png")
+    fig.savefig(plot_bytes, format = "png", transparent=True)
     plot_bytes.seek(0)
     plt.clf()
 
     return plot_bytes
 
 def plot_momento_torcor(shaft_len, T, fc):
-    plt.title('Diagrama Momento Torçor')
+    fig = Figure()
+    ax = fig.subplots()
+    ax.title.set_text('Diagrama Momento Torçor')
     marginx = (shaft_len + 1)/7
     marginy = (abs(fc) + 1)/7
 
-    plt.axis([-marginx, shaft_len+ marginx,  fc - marginy if fc < 0 else marginy, fc + marginy if fc > 0 else marginy])
+    # ax.axis([-marginx, shaft_len+ marginx,  fc - marginy if fc < 0 else marginy, fc + marginy if fc > 0 else marginy])
 
     # eixo
-    plt.plot([0, 0, shaft_len, shaft_len],[0,T,T,0])
-    plt.plot([0, shaft_len],[0,0], 'k', ls="--")
+    ax.plot([0, 0, shaft_len, shaft_len],[0,T,T,0])
+    ax.plot([0, shaft_len],[0,0], 'k', ls="--")
     # plt.plot([0, d, shaft_len - d, shaft_len],[fc,0,0,fc], 'b', )
-
-    ax = plt.subplot()
 
     for key, spine in ax.spines.items():
         spine.set_visible(False)
@@ -178,9 +187,8 @@ def plot_momento_torcor(shaft_len, T, fc):
     ax.spines["left"].set_visible(True)
     
     plot_bytes = BytesIO()
-    plt.savefig(plot_bytes, format = "png")
+    fig.savefig(plot_bytes, format = "png", transparent=True)
     plot_bytes.seek(0)
-    plt.clf()
 
     return plot_bytes
     # ax.spines.set_visible(False)
