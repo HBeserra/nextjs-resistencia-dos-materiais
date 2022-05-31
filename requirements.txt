@@ -3,3 +3,4 @@ flask_cors
 matplotlib 
 numpy
 gunicorn
+flask_sqlalchemy
