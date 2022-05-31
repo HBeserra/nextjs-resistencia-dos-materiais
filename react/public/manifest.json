@@ -2,8 +2,8 @@
     "name": "Calculadora de eixo  | A3 Resmat",
     "short_name": "Calculadora de eixo",
     "description": "Calculador de eixos, resistencia dos materiais.",
-    "theme_color": "#E02041",
-    "background_color": "#F0F0F5",
+    "theme_color": "#206ce0",
+    "background_color": "#206ce0",
     "icons": [
         {
             "src": "/icon_x42.png",
@@ -36,7 +36,7 @@
             "purpose": "any"
         }
     ],
-    "display": "minimal-ui",
+    "display": "standalone",
     "splash_pages": null,
     "orientation": "portrait",
     "scope": "/",

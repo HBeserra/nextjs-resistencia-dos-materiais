@@ -57,7 +57,7 @@ export default function MyApp({ Component, pageProps }) {
         <meta name="author" content="Herbert F Beserra" />
         <meta name="keywords" content="resmat, eixo, gratuitamente" />
         <meta name="theme-color" content="#206ce0" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#206ce0" />
       </Head>
       <CssBaseline />
 
