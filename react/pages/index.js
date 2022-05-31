@@ -29,9 +29,16 @@ function ResponsiveDrawer(props) {
   const [loading, set_loading] = React.useState()
   const [image_url, set_image_url] = React.useState()
 
+  function callUpdate(query) {
+    console.log("star", query)
+    set_loading(true)
+    if (timeOutId) clearTimeout(timeOutId)
+    setTimeOutId(setTimeout(() => update(query), 1000))
+  }
 
 
-  function update() {
+  function update(query) {
+    if(!query) return set_loading(false);
     let bodyFormData = new FormData();
     Object.entries(query).forEach(([key, value]) => {
       bodyFormData.append(key, value)
@@ -65,12 +72,7 @@ function ResponsiveDrawer(props) {
       });
   }
 
-  React.useEffect(() => {
-    set_loading(true)
-    if (timeOutId) clearTimeout(timeOutId)
-    setTimeOutId(setTimeout(() => update(), 1000))
-    console.log("change")
-  }, [query])
+
 
   let drawerWidth = (typeof window !== "undefined") ? Math.max(Math.min(window?.innerWidth * 0.75, 320), 250) : 320
 
@@ -125,7 +127,7 @@ function ResponsiveDrawer(props) {
             },
           }}
         >
-          <CalcConfigs callback={set_query} />
+          <CalcConfigs callback={(e) => callUpdate(e)} />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -138,7 +140,7 @@ function ResponsiveDrawer(props) {
           }}
           open
         >
-          <CalcConfigs callback={set_query} />
+          <CalcConfigs callback={(e) => callUpdate(e)} />
         </Drawer>
       </Box>
       <Box
