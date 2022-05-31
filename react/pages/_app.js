@@ -33,37 +33,30 @@ export default function MyApp({ Component, pageProps }) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="favicon.ico" type="image/x-icon" />
         <link
-          href="/icons/favicon-16x16.png"
+          href="/icon_x42.png"
           rel="icon"
           type="image/png"
-          sizes="16x16"
+          sizes="42x42"
         />
         <link
-          href="/icons/favicon-32x32.png"
+          href="/icon_x72.png"
           rel="icon"
           type="image/png"
-          sizes="32x32"
+          sizes="72x72"
         />
         <meta charSet="utf-8" />
         <meta name="language" content="pt-BR" />
         <title>
-          My Package | Rastreador de encomendas para pequenos negócios
+          Calculadora de eixo | A3 Resmat
         </title>
         <meta
           name="description"
-          content="Crie links de rastreio das suas vendas para os seus clientes gratuitamente! "
+          content="Calculador de eixos, resistencia dos materiais."
         />
         <meta name="robots" content="noimageclick" />
         <meta name="author" content="Herbert F Beserra" />
-        <meta name="keywords" content="correios, rastreamento, gratuitamente" />
-        <meta name="theme-color" content="#E02041" />
-        <link rel="apple-touch-icon" href="/apple-icon.png"></link>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="MY Package" />
-        <meta name="msapplication-config" content="/icons/browserconfig.xml" />
-        <meta name="msapplication-TileColor" content="#E02041" />
-        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="keywords" content="resmat, eixo, gratuitamente" />
+        <meta name="theme-color" content="#206ce0" />
         <meta name="theme-color" content="#000000" />
       </Head>
       <CssBaseline />
